@@ -19,6 +19,9 @@ target("llaisys-ops-cpu")
     if not is_plat("windows") then
         add_cxflags("-fPIC", "-Wno-unknown-pragmas")
     end
+    if is_plat("linux") then
+        add_cxflags("-fopenmp")
+    end
 
     add_files("../src/ops/*/cpu/*.cpp")
 

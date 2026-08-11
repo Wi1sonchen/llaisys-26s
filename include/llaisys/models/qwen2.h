@@ -37,6 +37,16 @@ __C {
 
     __export struct LlaisysQwen2Weights *llaisysQwen2ModelWeights(struct LlaisysQwen2Model * model);
 
+    // Load one safetensors entry by its Hugging Face checkpoint name.
+    // Returns 1 when the name belongs to this model and was loaded, otherwise 0.
+    __export int llaisysQwen2ModelLoadWeight(struct LlaisysQwen2Model * model, const char *name, const void *data, size_t nbytes);
+
+    __export int llaisysQwen2ModelAllWeightsLoaded(struct LlaisysQwen2Model * model);
+
+    __export void llaisysQwen2ModelResetCache(struct LlaisysQwen2Model * model);
+
+    __export size_t llaisysQwen2ModelCacheLength(struct LlaisysQwen2Model * model);
+
     __export int64_t llaisysQwen2ModelInfer(struct LlaisysQwen2Model * model, int64_t * token_ids, size_t ntoken);
 }
 #endif // LLAISYS_MODELS_QWEN2_H
