@@ -13,9 +13,23 @@ option("nv-gpu")
     set_description("Whether to compile implementations for Nvidia GPU")
 option_end()
 
+-- Iluvatar / CoreX --
+option("iluvatar-gpu")
+    set_default(false)
+    set_showmenu(true)
+    set_description("Whether to compile CUDA-compatible implementations for Iluvatar CoreX GPU")
+option_end()
+
+
 if has_config("nv-gpu") then
     add_defines("ENABLE_NVIDIA_API")
     includes("xmake/nvidia.lua")
+elseif has_config("iluvatar-gpu") then
+    -- Keep the existing logical CUDA/NVIDIA device path so the assignment's
+    -- existing --device nvidia tests and dispatch code can be reused.
+    add_defines("ENABLE_NVIDIA_API")
+    add_defines("ENABLE_ILUVATAR_API")
+    includes("xmake/iluvatar.lua")
 end
 
 target("llaisys-utils")
@@ -37,6 +51,10 @@ target("llaisys-device")
     set_kind("static")
     add_deps("llaisys-utils")
     add_deps("llaisys-device-cpu")
+
+    if has_config("nv-gpu") or has_config("iluvatar-gpu") then
+        add_deps("llaisys-device-nvidia")
+    end
 
     set_languages("cxx17")
     set_warnings("all", "error")
@@ -83,6 +101,10 @@ target_end()
 target("llaisys-ops")
     set_kind("static")
     add_deps("llaisys-ops-cpu")
+
+    if has_config("nv-gpu") or has_config("iluvatar-gpu") then
+        add_deps("llaisys-ops-nvidia")
+    end
 
     set_languages("cxx17")
     set_warnings("all", "error")
